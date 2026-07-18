@@ -21,19 +21,19 @@ https://customer-support-system-ochre.vercel.app/
 # Screenshots
 
 ## Ticket Submission
-![Home](assets/screenshots/home.png)
+![Home](assets/home.png)
 
 ## Agent Dashboard
-![Dashboard](assets/screenshots/dashboard.png)
+![Dashboard](assets/dashboard.png)
 
 ## Analytics Dashboard
-![Analytics](assets/screenshots/analytics.png)
+![Analytics](assets/analytics.png)
 
 ## Knowledge Base
-![Knowledge Base](assets/screenshots/knowledge-base.png)
+![Knowledge Base](assets/knowledge-base.png)
 
 ## Ticket Created
-![Ticket Created](assets/screenshots/ticket-created.png)
+![Ticket Created](assets/ticket-created.png)
 
 ## Tech Stack
 
