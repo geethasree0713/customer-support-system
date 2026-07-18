@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Helpdesk Portal</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="logo">
+            <h1>🎫 Helpdesk Portal</h1>
+        </div>
+
+        <nav>
+
+            <a href="index.html" class="active">
+                Submit Ticket
+            </a>
+
+            <a href="knowledge.html">
+                Knowledge Base
+            </a>
+
+            <a href="dashboard.html">
+                Agent Dashboard
+            </a>
+
+            <a href="analytics.html">
+                Analytics
+            </a>
+
+        </nav>
+
+        <button id="theme-toggle" class="theme-btn">
+            🌙 Dark Mode
+        </button>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="container fade-in">
+
+        <section class="card ticket-card">
+
+            <h2>Create a Support Ticket</h2>
+
+            <p class="subtitle">
+                Tell us about your issue. Our support team will review your request
+                and respond as soon as possible.
+            </p>
+
+            <form id="ticket-form">
+
+                <div class="form-group">
+
+                    <label for="cust-name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="cust-name"
+                        placeholder="Enter your name"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="cust-email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="cust-email"
+                        placeholder="example@email.com"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="ticket-title">
+                        Issue Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="ticket-title"
+                        placeholder="Brief summary of your issue"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="ticket-priority">
+                        Priority
+                    </label>
+
+                    <select id="ticket-priority">
+
+                        <option value="Low">
+                            🟢 Low
+                        </option>
+
+                        <option value="Medium">
+                            🟡 Medium
+                        </option>
+
+                        <option value="High">
+                            🔴 High
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="ticket-desc">
+                        Issue Description
+                    </label>
+
+                    <textarea
+                        id="ticket-desc"
+                        rows="5"
+                        placeholder="Describe your issue in detail..."
+                        required></textarea>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="ticket-file">
+                        Attachment (Optional)
+                    </label>
+
+                    <input
+                        type="file"
+                        id="ticket-file"
+                        accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+
+                    <small>
+                        Supported files: PDF, JPG, PNG, DOC, DOCX
+                    </small>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="submit-btn">
+
+                    Submit Ticket
+
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            © 2026 Customer Helpdesk Portal |
+            Built using HTML, CSS, JavaScript, Firebase & EmailJS
+        </p>
+
+    </footer>
+
+
+    <!-- Toast Notifications -->
+
+    <div id="toast-container"></div>
+
+
+    <!-- JavaScript -->
+
+    <script type="module" src="js/ticket.js"></script>
+
+</body>
+
+</html>

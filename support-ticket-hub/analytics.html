@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analytics Dashboard | Customer Helpdesk</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/analytics.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        <h1>📊 Analytics Dashboard</h1>
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Submit Ticket
+        </a>
+
+        <a href="knowledge.html">
+            Knowledge Base
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="analytics.html" class="active">
+            Analytics
+        </a>
+
+    </nav>
+
+    <button id="theme-toggle" class="theme-btn">
+        🌙 Dark Mode
+    </button>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container fade-in">
+
+    <section class="analytics-cards">
+
+        <div class="card stat-card">
+
+            <h4>Total Tickets</h4>
+
+            <h2 id="kpi-total">0</h2>
+
+        </div>
+
+        <div class="card stat-card">
+
+            <h4>Open Tickets</h4>
+
+            <h2 id="kpi-active">0</h2>
+
+        </div>
+
+        <div class="card stat-card">
+
+            <h4>Resolved Tickets</h4>
+
+            <h2 id="kpi-resolved">0</h2>
+
+        </div>
+
+        <div class="card stat-card">
+
+            <h4>Average Resolution Time</h4>
+
+            <h2 id="kpi-art">0 hrs</h2>
+
+        </div>
+
+        <div class="card stat-card">
+
+            <h4>Customer Rating</h4>
+
+            <h2 id="kpi-csat">0 ⭐</h2>
+
+        </div>
+
+    </section>
+
+
+    <section class="charts-grid">
+
+        <div class="card">
+
+            <h3>Tickets by Priority</h3>
+
+            <canvas id="chart-priority"></canvas>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Ticket Status</h3>
+
+            <canvas id="chart-lifecycle"></canvas>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+
+        © 2026 Customer Helpdesk Portal |
+        Analytics Dashboard
+
+    </p>
+
+</footer>
+
+<script type="module" src="js/analytics.js"></script>
+
+</body>
+
+</html>

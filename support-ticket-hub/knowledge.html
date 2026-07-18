@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Knowledge Base | Customer Helpdesk</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="logo">
+            <h1>📚 Knowledge Base</h1>
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Submit Ticket
+            </a>
+
+            <a href="knowledge.html" class="active">
+                Knowledge Base
+            </a>
+
+            <a href="dashboard.html">
+                Agent Dashboard
+            </a>
+
+            <a href="analytics.html">
+                Analytics
+            </a>
+
+        </nav>
+
+        <button id="theme-toggle" class="theme-btn">
+            🌙 Dark Mode
+        </button>
+
+    </header>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="container fade-in">
+
+        <section class="card knowledge-card">
+
+            <h2>Find Solutions Quickly</h2>
+
+            <p class="subtitle">
+                Search our knowledge base for answers to common issues before submitting a support ticket.
+            </p>
+
+            <div class="form-group">
+
+                <label for="kb-search">
+                    Search Articles
+                </label>
+
+                <input
+                    type="text"
+                    id="kb-search"
+                    placeholder="Search for password, Wi-Fi, printer, login..."
+                    autocomplete="off">
+
+            </div>
+
+        </section>
+
+        <section id="kb-results-container" class="knowledge-results">
+
+            <!-- Articles will be loaded here dynamically -->
+
+        </section>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            © 2026 Customer Helpdesk Portal |
+            Find answers instantly through our Knowledge Base
+        </p>
+
+    </footer>
+
+    <script type="module" src="js/knowledge.js"></script>
+
+</body>
+
+</html>

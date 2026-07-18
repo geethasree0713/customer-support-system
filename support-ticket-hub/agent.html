@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent Dashboard - Support Ticket Hub</title>
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <!-- Inline Theme Init -->
+    <script>
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen relative overflow-x-hidden">
+    
+    <!-- Glow Effects in Background -->
+    <div class="absolute top-0 right-1/4 w-96 h-96 bg-indigo-400/10 dark:bg-indigo-600/5 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-200/50 dark:border-slate-800/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-600/20">
+            <i data-lucide="shield" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">Support Ticket Hub</span>
+            <span class="block text-[10px] text-slate-500 font-medium">AGENT CONSOLE</span>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center space-x-1 font-medium text-sm">
+          <a href="/" class="px-3 py-2 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg">Customer Portal</a>
+          <a href="/agent.html" class="px-3 py-2 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-lg">Agent Desk</a>
+          <a href="/analytics.html" class="px-3 py-2 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg">Analytics</a>
+          <a href="/knowledge.html" class="px-3 py-2 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg">Knowledge Base</a>
+        </nav>
+
+        <div class="flex items-center space-x-2">
+          <!-- Light/Dark Toggle -->
+          <button id="themeToggleBtn" class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg" title="Toggle Theme">
+            <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+            <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+          </button>
+
+          <!-- System Logs Trigger -->
+          <button id="drawerToggleBtn" class="p-2 relative text-indigo-600 dark:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg" title="System Logs & Database Config">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+            <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-indigo-600 rounded-full animate-pulse-ring"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      
+      <!-- Alert Toasts Container -->
+      <div id="toastContainer" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+      <!-- Workspace Filters Header -->
+      <section class="glass-card p-5 rounded-2xl mb-6 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          
+          <!-- Search input -->
+          <div class="relative flex-grow max-w-md">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </span>
+            <input type="text" id="agentSearchInput" placeholder="Search customer, ID (TKT-XXXX), or keyword..." class="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <!-- Quick Filters Dropdowns -->
+          <div class="flex flex-wrap items-center gap-3">
+            
+            <!-- Category Filter -->
+            <div>
+              <select id="filterCategory" class="px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="ALL">All Categories</option>
+                <option value="Billing">Billing & Payments</option>
+                <option value="Technical">Technical Support</option>
+                <option value="General">General Question</option>
+                <option value="Feature Request">Feature Request</option>
+              </select>
+            </div>
+
+            <!-- Priority Filter -->
+            <div>
+              <select id="filterPriority" class="px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="ALL">All Priorities</option>
+                <option value="High">🔴 High Priority</option>
+                <option value="Medium">🟡 Medium Priority</option>
+                <option value="Low">⚪ Low Priority</option>
+              </select>
+            </div>
+
+            <!-- Agent Filter -->
+            <div>
+              <select id="filterAgent" class="px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="ALL">All Agents</option>
+                <option value="Unassigned">Unassigned</option>
+                <option value="Sarah Jenkins">Sarah Jenkins</option>
+                <option value="Alex Mercer">Alex Mercer</option>
+                <option value="Emma Stone">Emma Stone</option>
+              </select>
+            </div>
+
+            <!-- Sorting selector -->
+            <div>
+              <select id="sortOrder" class="px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="NEWEST">Sort: Newest</option>
+                <option value="OLDEST">Sort: Oldest</option>
+                <option value="SLA">Sort: SLA Urgent</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Status Filter Tabs -->
+        <div class="border-t border-slate-200/50 dark:border-slate-800/50 pt-4 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex space-x-1.5" id="statusFilterTabs">
+            <button class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white" data-status="ALL">
+              All Tickets <span class="ml-1 bg-white/20 px-1.5 py-0.5 rounded-full text-[10px]" id="cntALL">0</span>
+            </button>
+            <button class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900" data-status="Open">
+              Open <span class="ml-1 bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded-full text-[10px]" id="cntOpen">0</span>
+            </button>
+            <button class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900" data-status="In Progress">
+              In Progress <span class="ml-1 bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded-full text-[10px]" id="cntInProgress">0</span>
+            </button>
+            <button class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900" data-status="Resolved">
+              Resolved <span class="ml-1 bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded-full text-[10px]" id="cntResolved">0</span>
+            </button>
+          </div>
+
+          <!-- Total results summary -->
+          <span class="text-xs text-slate-400 font-medium" id="totalMatchesDisplay">Showing 0 matching tickets</span>
+        </div>
+      </section>
+
+      <!-- Workspace Dual Pane: Left Cards Grid / Right Editor Pane -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left: Ticket Cards Queue (Spans 7 cols on XL) -->
+        <div class="xl:col-span-7 space-y-4" id="ticketsQueueContainer">
+          <!-- Dynamic loading indicator / empty state -->
+          <div class="text-center py-20 bg-white/40 dark:bg-slate-900/10 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
+            <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto text-indigo-500 mb-2"></i>
+            <p class="text-sm font-semibold text-slate-500">Retrieving tickets from Database...</p>
+          </div>
+        </div>
+
+        <!-- Right: Action Editor Drawer Panel (Spans 5 cols on XL) -->
+        <div class="xl:col-span-5 sticky top-24" id="detailsWorkspacePanel">
+          
+          <!-- Empty Triage State -->
+          <div id="detailsEmptyState" class="glass-card p-10 rounded-3xl text-center space-y-3">
+            <div class="w-16 h-16 bg-slate-100 dark:bg-slate-900 text-slate-400 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+              <i data-lucide="triage" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-bold text-slate-800 dark:text-slate-100 text-base">Triage & Investigation Workspace</h3>
+            <p class="text-xs text-slate-500 max-w-xs mx-auto leading-normal">Select a ticket card from the left queue to view user attachments, assign agents, edit metadata, log developer notes, or resolve.</p>
+          </div>
+
+          <!-- Active Investigation Details Panel (Hidden by default) -->
+          <div id="activeDetailsWorkspace" class="glass-card rounded-3xl overflow-hidden flex flex-col max-h-[80vh] hidden shadow-2xl border-2 border-indigo-500/20 dark:border-indigo-400/20">
+            
+            <!-- Panel Header -->
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-100/30 dark:bg-slate-900/30 flex items-center justify-between shrink-0">
+              <div class="flex items-center space-x-2">
+                <span id="activeTicketId" class="font-mono font-extrabold text-sm px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg">TKT-XXXX</span>
+                <span id="activeSlaTimer" class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-green-500 text-white tracking-wider">SLA Urgent</span>
+              </div>
+              <div class="flex items-center space-x-1">
+                <button id="deleteTicketBtn" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/5 rounded-lg" title="Delete Ticket">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <button id="closeDetailsBtn" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400">
+                  <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Scrollable workspace body -->
+            <div class="p-5 overflow-y-auto space-y-5 flex-grow">
+              
+              <!-- Quick State Controls (Status and Assignee) -->
+              <div class="grid grid-cols-2 gap-4 border-b border-slate-200/50 dark:border-slate-800/50 pb-4 shrink-0">
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1.5">Triage Status</label>
+                  <select id="activeStatusSelect" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-bold">
+                    <option value="Open">🔵 Open</option>
+                    <option value="In Progress">🟠 In Progress</option>
+                    <option value="Resolved">🟢 Resolved</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1.5">Assigned Investigator</label>
+                  <select id="activeAgentSelect" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-bold">
+                    <option value="Unassigned">Unassigned</option>
+                    <option value="Sarah Jenkins">Sarah Jenkins</option>
+                    <option value="Alex Mercer">Alex Mercer</option>
+                    <option value="Emma Stone">Emma Stone</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Collapsible Edit Ticket Details Form -->
+              <div class="border-b border-slate-200/50 dark:border-slate-800/50 pb-4 shrink-0">
+                <button id="toggleEditFormBtn" class="text-xs font-bold text-indigo-500 flex items-center space-x-1 hover:underline">
+                  <i data-lucide="pencil-line" class="w-3.5 h-3.5"></i>
+                  <span>Edit Ticket Metadata</span>
+                </button>
+                
+                <form id="editTicketForm" class="hidden mt-4 space-y-3 p-3 bg-slate-100/50 dark:bg-slate-900/30 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Customer Name</label>
+                      <input type="text" id="editCustomerName" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+                    </div>
+                    <div>
+                      <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Customer Email</label>
+                      <input type="email" id="editCustomerEmail" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Category</label>
+                      <select id="editCategory" class="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+                        <option value="Billing">Billing</option>
+                        <option value="Technical">Technical</option>
+                        <option value="General">General</option>
+                        <option value="Feature Request">Feature Request</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Priority</label>
+                      <select id="editPriority" class="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Issue Title</label>
+                    <input type="text" id="editTitle" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+                  </div>
+                  <div class="text-right">
+                    <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-md shadow-indigo-600/10">
+                      Save Changes
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Core Ticket Details -->
+              <div class="space-y-2">
+                <span id="activeTicketCategory" class="text-[10px] uppercase font-bold tracking-widest text-slate-400">Category Placeholder</span>
+                <h3 id="activeTicketTitle" class="text-base font-extrabold text-slate-900 dark:text-white leading-snug">Issue Title Placeholder</h3>
+                <div class="flex items-center space-x-2 text-xs text-slate-500">
+                  <span class="font-semibold text-slate-800 dark:text-slate-200" id="activeCustomerName">Customer</span>
+                  <span class="text-slate-300 dark:text-slate-700">|</span>
+                  <span class="font-mono text-[11px]" id="activeCustomerEmail">Email</span>
+                </div>
+                <p id="activeTicketDescription" class="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-3.5 rounded-2xl border border-slate-150 dark:border-slate-900">Description text.</p>
+              </div>
+
+              <!-- Attachment Box -->
+              <div id="activeAttachmentBox" class="p-3 bg-indigo-500/5 border border-indigo-200/50 dark:border-indigo-900/50 rounded-2xl hidden">
+                <span class="block text-[10px] font-bold uppercase text-slate-400 mb-2">Customer Attachment</span>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-2 overflow-hidden">
+                    <i data-lucide="paperclip" class="w-4 h-4 text-indigo-500 shrink-0"></i>
+                    <span id="activeAttachmentName" class="text-xs font-bold truncate text-slate-700 dark:text-slate-300">file.pdf</span>
+                  </div>
+                  <a id="activeAttachmentLink" href="#" target="_blank" class="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-semibold flex items-center space-x-1 shrink-0 shadow">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- CSAT Rating Feedback Box (Only if Resolved & Rated) -->
+              <div id="activeCsatFeedbackBox" class="p-4 border border-green-200 dark:border-green-950/40 bg-green-500/5 rounded-2xl hidden">
+                <span class="text-[10px] font-extrabold uppercase text-green-600 dark:text-green-400 tracking-wider flex items-center mb-2">
+                  <i data-lucide="heart" class="w-3.5 h-3.5 mr-1 fill-current"></i>
+                  Customer CSAT Feedback
+                </span>
+                <div class="flex items-center space-x-1.5 text-yellow-500 mb-1" id="activeCsatStars"></div>
+                <p id="activeCsatComment" class="text-xs text-slate-600 dark:text-slate-300 italic">"Feedback comment"</p>
+              </div>
+
+              <!-- Internal Notes & Timelines -->
+              <div class="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-4">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center">
+                  <i data-lucide="message-square" class="w-3.5 h-3.5 mr-1"></i>
+                  Internal Notes & Communication logs
+                </h4>
+
+                <!-- Log timeline -->
+                <div id="activeNotesTimeline" class="space-y-3.5 pl-3 border-l-2 border-indigo-500/20 max-h-60 overflow-y-auto"></div>
+
+                <!-- Add Note Form -->
+                <form id="addNoteForm" class="flex space-x-2 shrink-0">
+                  <input type="text" id="newNoteInput" required placeholder="Add diagnostic update or client note..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold flex items-center shrink-0 shadow-md">
+                    <span>Add</span>
+                  </button>
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- DB Config Drawer & Notifications Hub -->
+    <div id="dbDrawer" class="fixed top-0 right-0 z-50 w-full sm:w-96 h-screen bg-slate-50 dark:bg-slate-950 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col translate-x-full transition-transform duration-300 ease-out">
+      
+      <!-- Drawer Header -->
+      <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="terminal" class="w-5 h-5 text-indigo-500"></i>
+          <span class="font-bold text-sm tracking-tight text-slate-800 dark:text-slate-100">System Logs & database Control</span>
+        </div>
+        <button id="closeDrawerBtn" class="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-slate-400">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Tabs -->
+      <div class="flex border-b border-slate-200 dark:border-slate-800 shrink-0 text-xs">
+        <button id="tabLogsBtn" class="flex-1 py-3 text-center font-bold text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400">Notification Console</button>
+        <button id="tabDbBtn" class="flex-1 py-3 text-center font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">DB & Email API</button>
+      </div>
+
+      <!-- Drawer Content -->
+      <div class="flex-grow overflow-y-auto p-4 space-y-4">
+        
+        <!-- Tab content 1: Interactive notifications logs -->
+        <div id="drawerLogsContent" class="space-y-3">
+          <div class="bg-indigo-500/10 rounded-xl p-3 text-xs leading-normal">
+            <p class="font-semibold text-indigo-700 dark:text-indigo-400">👋 System Notification HUD</p>
+            <p class="text-slate-500 mt-1">Actions on this portal dispatch real-time system notifications. When an email is triggered, it logs here with its detailed body content.</p>
+          </div>
+          
+          <h4 class="text-[10px] font-extrabold uppercase text-slate-400 tracking-widest flex items-center">
+            <i data-lucide="clock" class="w-3 h-3 mr-1"></i> Live Audit Logs
+          </h4>
+          
+          <div id="liveEmailLogs" class="space-y-2.5">
+            <!-- Dynamic notifications injected here -->
+            <p class="text-xs text-slate-400 text-center py-8 italic">No notifications logged yet. Trigger ticket updates to initiate!</p>
+          </div>
+        </div>
+
+        <!-- Tab content 2: Database Configuration Forms -->
+        <div id="drawerDbContent" class="space-y-5 hidden">
+          
+          <!-- DB Engine status -->
+          <div class="border border-slate-200/50 dark:border-slate-800/50 bg-slate-100/50 dark:bg-slate-900/30 p-3.5 rounded-xl text-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-500">Database Engine:</span>
+              <span id="activeDbStatusBadge" class="bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded font-bold uppercase text-[9px]">LOCAL STORAGE</span>
+            </div>
+            <p class="text-[10px] text-slate-400">To persist your database to the cloud, paste your Firebase web configurations below.</p>
+          </div>
+
+          <!-- Firebase Setup Config Input -->
+          <div class="space-y-3">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Firebase Cloud Integration</h5>
+            <textarea id="firebaseConfigArea" rows="6" placeholder='{
+  "apiKey": "AIzaSyA...",
+  "authDomain": "your-app.firebaseapp.com",
+  "projectId": "your-app",
+  "storageBucket": "your-app.appspot.com",
+  "messagingSenderId": "8392...",
+  "appId": "1:8392..."
+}' class="w-full p-2.5 text-[11px] font-mono rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/50 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-slate-700 dark:text-slate-200"></textarea>
+            <div class="flex space-x-2 justify-end">
+              <button id="clearDbConfigBtn" class="px-3 py-1.5 border border-red-200 hover:bg-red-50 dark:hover:bg-red-950/20 text-red-500 rounded-lg text-xs font-semibold">
+                Disconnect
+              </button>
+              <button id="saveDbConfigBtn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold">
+                Apply Cloud Connect
+              </button>
+            </div>
+          </div>
+
+          <!-- EmailJS configuration -->
+          <div class="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">EmailJS Service Keys</h5>
+            
+            <div class="space-y-2.5">
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Public API Key</label>
+                <input type="text" id="emailjsPublicKey" placeholder="user_UBy8a2..." class="w-full p-2 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Service ID</label>
+                <input type="text" id="emailjsServiceId" placeholder="service_gmail" class="w-full p-2 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Template ID</label>
+                <input type="text" id="emailjsTemplateId" placeholder="template_support" class="w-full p-2 text-xs rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950">
+              </div>
+            </div>
+            
+            <div class="text-right">
+              <button id="saveEmailKeysBtn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold">
+                Save Keys
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Logs Drawer Button -->
+    <button id="floatingLogTrigger" class="fixed bottom-6 right-6 z-30 p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95" title="Open Notification Center">
+      <i data-lucide="bell" class="w-6 h-6"></i>
+      <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse" id="notificationDot"></span>
+    </button>
+
+    <!-- JS Scripts -->
+    <script type="module" src="/js/dashboard.js"></script>
+  </body>
+</html>

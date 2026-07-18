@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/index", "dest": "/index.html" },
+    { "src": "/dashboard", "dest": "/dashboard.html" },
+    { "src": "/analytics", "dest": "/analytics.html" },
+    { "src": "/knowledge", "dest": "/knowledge.html" }
+  ]
+}

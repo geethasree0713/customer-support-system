@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Agent Dashboard | Customer Helpdesk</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        <h1>🛠 Agent Dashboard</h1>
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Submit Ticket
+        </a>
+
+        <a href="knowledge.html">
+            Knowledge Base
+        </a>
+
+        <a href="dashboard.html" class="active">
+            Dashboard
+        </a>
+
+        <a href="analytics.html">
+            Analytics
+        </a>
+
+    </nav>
+
+    <button id="theme-toggle" class="theme-btn">
+        🌙 Dark Mode
+    </button>
+
+</header>
+
+<div class="dashboard-wrapper fade-in">
+
+    <!-- FILTER PANEL -->
+
+    <aside class="filter-panel card">
+
+        <h3>Filter Tickets</h3>
+
+        <div class="control-group">
+
+            <label>Search</label>
+
+            <input
+                type="text"
+                id="search-bar"
+                placeholder="Ticket ID, customer or issue">
+
+        </div>
+
+        <div class="control-group">
+
+            <label>Status</label>
+
+            <select id="filter-status">
+
+                <option value="All">All</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+
+            </select>
+
+        </div>
+
+        <div class="control-group">
+
+            <label>Priority</label>
+
+            <select id="filter-priority">
+
+                <option value="All">All</option>
+                <option value="High">🔴 High</option>
+                <option value="Medium">🟡 Medium</option>
+                <option value="Low">🟢 Low</option>
+
+            </select>
+
+        </div>
+
+        <div class="control-group">
+
+            <label>Assigned Agent</label>
+
+            <select id="filter-agent">
+
+                <option value="All">All</option>
+                <option value="Unassigned">Unassigned</option>
+                <option value="John">John</option>
+                <option value="David">David</option>
+                <option value="Sarah">Sarah</option>
+                <option value="Emily">Emily</option>
+
+            </select>
+
+        </div>
+
+        <div class="live-counter card">
+
+            <h4>Live Tickets</h4>
+
+            <strong id="queue-depth">0</strong>
+
+        </div>
+
+    </aside>
+
+    <!-- TABLE -->
+
+    <section class="main-queue">
+
+        <div class="card">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Ticket ID</th>
+                        <th>Customer</th>
+                        <th>Issue</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Agent</th>
+                        <th>SLA</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="ticket-rows">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- DETAILS -->
+
+    <aside class="detail-drawer card" id="detail-drawer">
+
+        <div id="drawer-default-msg">
+
+            Select a ticket to view details.
+
+        </div>
+
+        <div id="drawer-content" class="hidden">
+
+            <h3 id="dw-title">Ticket Details</h3>
+
+            <p><strong>Ticket ID:</strong> <span id="dw-id"></span></p>
+
+            <p>
+
+                <strong>Customer:</strong>
+
+                <span id="dw-cust"></span>
+
+                (<span id="dw-email"></span>)
+
+            </p>
+
+            <p><strong>Description</strong></p>
+
+            <blockquote id="dw-desc"></blockquote>
+
+            <div id="dw-attachment-block" class="hidden">
+
+                <p>
+
+                    <strong>Attachment:</strong>
+
+                    <a id="dw-link" target="_blank">
+
+                        Download File
+
+                    </a>
+
+                </p>
+
+            </div>
+
+            <hr>
+
+            <div class="control-group">
+
+                <label>Status</label>
+
+                <select id="dw-action-status">
+
+                    <option>Open</option>
+                    <option>In Progress</option>
+                    <option>Resolved</option>
+
+                </select>
+
+            </div>
+
+            <div class="control-group">
+
+                <label>Assign Agent</label>
+
+                <select id="dw-action-agent">
+
+                    <option>Unassigned</option>
+                    <option>John</option>
+                    <option>David</option>
+                    <option>Sarah</option>
+                    <option>Emily</option>
+
+                </select>
+
+            </div>
+
+            <div class="control-group">
+
+                <label>Internal Notes</label>
+
+                <div id="dw-notes-log" class="notes-log"></div>
+
+                <textarea
+                    id="dw-new-note"
+                    rows="3"
+                    placeholder="Add a note..."></textarea>
+
+                <button id="dw-add-note-btn">
+
+                    Add Note
+
+                </button>
+
+            </div>
+
+            <button
+                id="dw-save-btn"
+                class="save-btn">
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </aside>
+
+</div>
+
+<!-- CUSTOMER FEEDBACK -->
+
+<div id="csat-modal" class="modal-overlay hidden">
+
+    <div class="modal-card card">
+
+        <h3>Customer Feedback</h3>
+
+        <p>
+
+            Rate the support provided for
+
+            <strong id="csat-target-id"></strong>
+
+        </p>
+
+        <div class="rating-stars">
+
+            <span data-val="1">⭐</span>
+            <span data-val="2">⭐</span>
+            <span data-val="3">⭐</span>
+            <span data-val="4">⭐</span>
+            <span data-val="5">⭐</span>
+
+        </div>
+
+        <textarea
+            id="csat-comment"
+            placeholder="Write your feedback..."></textarea>
+
+        <button id="csat-submit">
+
+            Submit Rating
+
+        </button>
+
+    </div>
+
+</div>
+
+<footer>
+
+    <p>
+
+        © 2026 Customer Helpdesk Portal |
+        Agent Dashboard
+
+    </p>
+
+</footer>
+
+<div id="toast-container"></div>
+
+<script type="module" src="js/dashboard.js"></script>
+
+</body>
+</html>
