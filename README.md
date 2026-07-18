@@ -18,6 +18,23 @@ https://customer-support-system-ochre.vercel.app/
 - Searchable Knowledge Base for common issues
 - Responsive UI with Light/Dark mode
 
+# Screenshots
+
+## Ticket Submission
+![Home](assets/screenshots/home.png)
+
+## Agent Dashboard
+![Dashboard](assets/screenshots/dashboard.png)
+
+## Analytics Dashboard
+![Analytics](assets/screenshots/analytics.png)
+
+## Knowledge Base
+![Knowledge Base](assets/screenshots/knowledge-base.png)
+
+## Ticket Created
+![Ticket Created](assets/screenshots/ticket-created.png)
+
 ## Tech Stack
 
 - HTML5
